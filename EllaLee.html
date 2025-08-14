@@ -1,0 +1,319 @@
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mil English Essay Evaluation - 이세온 (Ella)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .report-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .report-header {
+            background-color: #5b21b6; /* Changed to Purple */
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .report-header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        .report-header p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        .section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+        .section-title svg {
+            width: 28px;
+            height: 28px;
+            margin-right: 0.75rem;
+            color: #7c3aed; /* Purple Accent */
+        }
+        .original-essay {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Times New Roman', serif;
+            line-height: 1.8;
+            color: #374151;
+            white-space: pre-wrap;
+        }
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .rubric-table th, .rubric-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .rubric-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        .rubric-table td .score {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #7c3aed; /* Purple Accent */
+        }
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .skill-card {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        .skill-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .skill-card .level {
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .level-beginner { background-color: #fee2e2; color: #b91c1c; }
+        .level-intermediate { background-color: #ffedd5; color: #c2410c; }
+        .level-proficient { background-color: #dbeafe; color: #1e40af; }
+        .skill-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        .skill-card p strong {
+            color: #374151;
+        }
+        .correction-step {
+            margin-bottom: 2rem;
+        }
+        .correction-step h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #7c3aed; /* Purple Accent */
+            display: inline-block;
+        }
+        .correction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .correction-table th, .correction-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+        .correction-table th {
+            background-color: #f3f4f6;
+        }
+        .original-sentence {
+            color: #ef4444;
+        }
+        .corrected-sentence {
+            color: #22c55e;
+            font-weight: 500;
+        }
+        .final-essay {
+            background-color: #f5f3ff; /* Purple Accent */
+            border-left: 4px solid #7c3aed; /* Purple Accent */
+            padding: 1.5rem;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+        .letter {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 2rem;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-container">
+        <!-- 보고서 헤더 -->
+        <header class="report-header">
+            <h1>mil English Essay Evaluation</h1>
+            <p class="text-purple-200">이세온 (Ella) 학생</p>
+        </header>
+
+        <!-- 학생 원본 에세이 -->
+        <section class="section">
+            <h3 class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                학생 원본 에세이
+            </h3>
+            <div class="original-essay">my favorite place is Lotte world.
+First there is many rides. and stop my, favorite slop is wenny benny. Also, my favorite ride is biking. next, biking can try many time. but the many ride can only try one time. The biking is scary I like scary thing. biking had not many people. So, when I go to the Lotte world I always ride biking. My dad buy a jelly, and giv it to me. So I always say thank you. I love you, dad. So my dad is So proud. my dad buy two ticket for my friend and me. my dad give a money to buy a jelly and candy. lastly, my dad is So kind. he can do the cook for me. So I'm happy. Next time I will go Lotte world with my dad.</div>
+        </section>
+
+        <!-- 평가 점수 -->
+        <section class="section">
+            <h3 class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                평가 점수 (Rubric Score)
+            </h3>
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Score</th>
+                        <th>Analysis (분석)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Organization & Structure (구성 및 구조)</td>
+                        <td><span class="score">1 / 4</span></td>
+                        <td>글의 주제를 명확하게 밝혔지만, 생각들을 문단으로 나누지 않고 하나의 긴 목록처럼 나열했습니다. 에세이의 기본 구조에 대한 이해가 필요합니다.</td>
+                    </tr>
+                    <tr>
+                        <td>Development & Elaboration (내용 전개 및 상세화)</td>
+                        <td><span class="score">2 / 4</span></td>
+                        <td>롯데월드를 좋아하는 이유를 구체적인 예시(바이킹, 젤리, 아빠의 친절함)를 들어 솔직하게 표현한 점이 매우 좋습니다.</td>
+                    </tr>
+                    <tr>
+                        <td>Language & Conventions (언어 및 규칙)</td>
+                        <td><span class="score">1 / 4</span></td>
+                        <td>문장 첫 글자 대문자, 주어-동사 수 일치, 동사 시제 등 기초적인 문법 규칙에서 반복적인 오류가 발견되어 글의 명확성을 개선할 필요가 있습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 학생 역량 분석 -->
+        <section class="section">
+            <h3 class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 100 15 7.5 7.5 0 000-15zM21 21l-5.197-5.197" /></svg>
+                학생 역량 분석 (Skill Level Analysis)
+            </h3>
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <h4>Vocabulary</h4>
+                    <span class="level level-beginner">Beginner (G2)</span>
+                    <p><strong>오류:</strong> `favorite`, `rides`, `happy` 등 좋은 묘사 어휘를 사용했지만, 대부분 기본적인 단어에 머물러 있습니다. 어휘의 범위가 제한적이고 반복적으로 사용됩니다.</p>
+                    <p><strong>제안:</strong> 글을 더 생생하게 만들기 위해 G2-G3 레벨의 새로운 어휘를 사용해 보세요. 예를 들어, 'scary' 대신 **'thrilling' (스릴 넘치는)** 또는 'kind' 대신 **'generous' (관대한)** 같은 단어를 쓸 수 있습니다.</p>
+                </div>
+                <div class="skill-card">
+                    <h4>Grammar & Punctuation</h4>
+                    <span class="level level-beginner">Beginner (G2)</span>
+                    <p><strong>오류:</strong> 문장 첫 글자 대문자, 주어-동사 수 일치(`there is many rides`), 동사 시제(`buy`, `giv`) 등 영어 문법의 가장 기초적인 규칙들에서 반복적인 오류가 나타나고 있습니다.</p>
+                    <p><strong>제안:</strong> 주어가 한 명일 때 동사 뒤에 's'를 붙이는 규칙(`My dad buys`)과, 과거의 일을 쓸 때 동사의 과거형(`gave`)을 사용하는 규칙에 집중하여 연습하는 것이 필요합니다.</p>
+                </div>
+                <div class="skill-card">
+                    <h4>Sentence Structure</h4>
+                    <span class="level level-beginner">Beginner (G2)</span>
+                    <p><strong>오류:</strong> 대부분의 문장이 "주어 + 동사" 형태의 단순 구조로 되어 있으며, `and`와 `so`를 사용하여 문장들을 나열하는 경향이 있습니다. 문장 시작이 `My dad...`, `biking...` 등으로 반복됩니다.</p>
+                    <p><strong>제안:</strong> `Because`(~ 때문에)와 같은 접속사를 사용하여 두 개의 짧은 문장을 하나의 문장으로 합치는 연습을 해보세요. 예를 들어, "**Because** my dad gives me money for candy, I know he is very kind." 와 같이 만들 수 있습니다.</p>
+                </div>
+                 <div class="skill-card">
+                    <h4>Essay Structure</h4>
+                    <span class="level level-beginner">Beginner (G2)</span>
+                    <p><strong>오류:</strong> 질문에 답하기 위해 이유를 제시해야 한다는 점은 이해했지만, 그 생각들을 **문단(paragraph)**으로 구조화하지 못하고 하나의 긴 목록처럼 작성했습니다. 서론, 본론, 결론의 구분이 명확하지 않습니다.</p>
+                    <p><strong>제안:</strong> 먼저 이야기(narrative) 글쓰기의 기초를 다지는 것이 중요합니다. 특히 동사의 과거 시제를 정확히 사용하는 연습을 한 후에, 에세이의 기본 구조(서론-본론-결론)를 배우는 단계로 나아가는 것이 좋습니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 상세 교정 -->
+        <section class="section">
+            <h3 class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                상세 교정 (Essay Corrections)
+            </h3>
+            <div class="correction-step">
+                <h4>Step 1: 문장별 문법 및 철자 교정</h4>
+                <p class="text-gray-600 mb-4">각 문장의 오류를 분석하고 올바른 표현과 친절한 설명을 제공합니다.</p>
+                <div class="correction-table-container overflow-x-auto">
+                    <table class="correction-table">
+                        <thead>
+                            <tr><th>Original Sentence (원본 문장)</th><th>Corrected Sentence (교정 문장)</th><th>Friendly Explanation (설명)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="original-sentence">my favorite place is Lotte world.</td><td class="corrected-sentence"><strong>My</strong> favorite place is Lotte <strong>World</strong>.</td><td>문장의 첫 글자와 'Lotte World' 같은 장소 이름은 항상 대문자로 써요.</td></tr>
+                            <tr><td class="original-sentence">First there is many rides.</td><td class="corrected-sentence">First, <strong>there are</strong> many rides.</td><td>'rides'는 여러 개니까 'is' 대신 'are'를 써요.</td></tr>
+                            <tr><td class="original-sentence">and stop my, favorite slop is wenny benny.</td><td class="corrected-sentence">My favorite <strong>shop</strong> is <strong>Weeny Beeny</strong>.</td><td>'slop'은 'shop'(가게)의 오타인 것 같아요. 가게 이름은 대문자로 써주는 게 좋아요.</td></tr>
+                            <tr><td class="original-sentence">Also, my favorite ride is biking.</td><td class="corrected-sentence">Also, my favorite ride is <strong>the Viking</strong>.</td><td>'biking'은 아마도 'Viking'(바이킹)을 말하는 것 같아요! 이것도 놀이기구 이름이니 대문자로 써줘요.</td></tr>
+                            <tr><td class="original-sentence">The biking is scary I like scary thing.</td><td class="corrected-sentence">The <strong>Viking</strong> is scary, <strong>and</strong> I like scary <strong>things</strong>.</td><td>두 개의 생각이 한 문장에 같이 있을 때는 쉼표(,)와 'and'로 연결해주거나, 마침표(.)로 문장을 나누어 주세요.</td></tr>
+                            <tr><td class="original-sentence">My dad buy a jelly, and giv it to me.</td><td class="corrected-sentence">My dad <strong>buys</strong> jelly for me and <strong>gives</strong> it to me.</td><td>주어가 'My dad' 한 명일 때는 동사 뒤에 's'를 붙여줘야 해요. 'giv'가 아니라 'gives'가 맞아요.</td></tr>
+                            <tr><td class="original-sentence">my dad buy two ticket for my friend and me.</td><td class="corrected-sentence">My dad <strong>bought</strong> two <strong>tickets</strong> for my friend and me.</td><td>이미 일어난 일이니까 'buy'의 과거형인 'bought'를 써야 해요. 티켓이 두 장이니까 'ticket'이 아니라 'tickets'라고 써요.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="correction-step">
+                <h4>Step 2: 어휘 선택 및 문장 흐름 교정</h4>
+                <p class="text-gray-600"><strong>단어 반복 (Word Repetition):</strong> 에세이에서 "my favorite", "my dad"와 같은 표현이 여러 번 반복되었어요. 이것은 학생의 마음을 잘 보여주지만, 글이 단조롭게 느껴질 수 있습니다.</p>
+                <p class="text-gray-600 mt-2"><strong>제안 (Suggestion):</strong> 문장을 다양하게 시작해 보세요. 예를 들어, "My dad..." 대신 "He is so kind because..." (아빠는 ~해서 정말 친절해요) 와 같이 시작할 수 있습니다. "biking can try many time"처럼 어색한 표현은 "You can ride the Viking many times"처럼 주어를 넣어 더 자연스러운 문장으로 다듬을 수 있습니다.</p>
+            </div>
+
+            <div class="correction-step">
+                <h4>Step 3: 최종 교정 에세이</h4>
+                <p class="text-gray-600 mb-4">학생의 아이디어를 바탕으로 요구된 에세이 형식에 맞춰 재구성한 모델 에세이입니다. 변경된 부분은 <strong>굵은 글씨</strong>로 표시했습니다.</p>
+                <div class="final-essay">
+                    <strong>My Favorite Place</strong><br><br>
+                    <strong>My</strong> favorite place is Lotte <strong>World</strong>. <strong>I love it for two reasons: it has exciting rides, and I can make special memories with my dad there.</strong><br><br>
+                    First, <strong>there are</strong> many <strong>fun</strong> rides at Lotte <strong>World</strong>. My favorite ride is <strong>the Viking</strong>. The <strong>Viking</strong> is scary, <strong>and</strong> I like scary <strong>things</strong>! <strong>What I also like is that you</strong> can ride <strong>the Viking</strong> many <strong>times</strong>, but <strong>many other</strong> rides can <strong>be ridden</strong> only one time. So, when I go to Lotte <strong>World</strong>, I always ride <strong>the Viking</strong>.<br><br>
+                    <strong>The second reason I love Lotte World is because of my kind dad.</strong> He always <strong>makes the day special</strong>. <strong>For example,</strong> my dad <strong>buys</strong> jelly for me and <strong>gives</strong> it to me. <strong>He once bought</strong> two <strong>tickets</strong> for my friend and me. <strong>He also gave me</strong> money to buy jelly and candy. Lastly, my dad is <strong>so</strong> kind <strong>because</strong> he <strong>also</strong> cooks for me. <strong>All of these things make</strong> me <strong>so</strong> happy.<br><br>
+                    <strong>In conclusion, Lotte World is the best place because of the thrilling rides and the happy times with my family.</strong> Next time, I will go <strong>to</strong> Lotte <strong>World</strong> with my dad <strong>again</strong>.
+                </div>
+            </div>
+        </section>
+
+        <!-- 학생에게 보내는 편지 -->
+        <section class="section">
+            <div class="letter">
+                <h4>To Students.</h4>
+                <p>이세온(Ella) 학생에게,</p>
+                <p class="mt-4">롯데월드에서 아빠와 함께 보낸 행복한 시간을 멋진 글로 써주어서 고마워요. 글을 읽는 내내 세온 학생의 신나는 마음이 그대로 전해져서 선생님도 함께 롯데월드에 간 것처럼 즐거웠어요. 특히 아빠가 젤리도 사주시고, 친구 티켓도 사주시는 다정한 모습들을 자세하게 이야기해준 점이 정말 훌륭해요.</p>
+                <p class="mt-4">학생의 가장 큰 <strong>강점</strong>은 자신의 생각과 감정을 솔직하게 표현하는 능력이에요. 글에 담긴 진솔한 마음이 큰 감동을 주었어요.</p>
+                <p class="mt-4">우리가 함께 발전시켜 나갈 부분은 **생각들을 주제별로 묶어서 문단을 나누어 주는 것**이에요. 지금은 모든 이야기가 한 곳에 모여 있는데, '신나는 놀이기구' 이야기와 '다정한 우리 아빠' 이야기를 각각 다른 상자에 담는다고 생각하면 쉬워요.</p>
+                <p class="mt-4">한 가지 <strong>제안</strong>을 할게요. 다음 글을 쓸 때는, 글을 쓰기 전에 내가 하고 싶은 이야기를 두 개의 큰 그룹으로 먼저 나누어 보는 거예요. 이렇게만 해도 글이 훨씬 더 정리되고 읽기 쉬워질 거예요.</p>
+                <p class="mt-4">롯데월드에서의 소중한 추억을 공유해줘서 정말 고마워요. 학생은 훌륭한 작가가 될 잠재력을 가지고 있어요!</p>
+                <p class="mt-6 font-semibold text-right">- 선생님 드림</p>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>
