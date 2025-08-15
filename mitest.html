@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MI 다중지능 검사</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .progress-bar-fill {
+            transition: width 0.3s ease-in-out;
+        }
+        .custom-radio input[type="radio"] {
+            display: none;
+        }
+        .custom-radio label {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid #D1D5DB;
+            transition: all 0.2s ease-in-out;
+            text-align: center;
+        }
+        .custom-radio input[type="radio"]:checked + label {
+            background-color: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="bg-white p-8 rounded-2xl shadow-lg text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">MI 다중지능 적성 및 진로 검사</h1>
+            <p class="text-gray-600 mb-6">본 검사는 여러분의 다중지능을 알아보고 적성에 맞는 진로를 탐색하는 데 도움을 주기 위해 만들어졌습니다. 정답은 없으니, 각 질문에 솔직하게 답변해주세요.</p>
+            <div class="max-w-md mx-auto">
+                <input id="name" type="text" placeholder="이름을 입력하세요" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input id="grade" type="text" placeholder="학년/반을 입력하세요 (예: 6학년 1반)" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="start-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">검사 시작하기</button>
+            </div>
+        </div>
+
+        <!-- Test Screen -->
+        <div id="test-screen" class="hidden">
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">진행률</span>
+                    <span id="progress-text" class="text-sm font-medium text-blue-600">1 / 56</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full progress-bar-fill" style="width: 1.78%"></div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-center mb-6">
+                    <p class="text-lg font-semibold text-gray-500">문항 <span id="question-number">1</span></p>
+                    <h2 id="question-text" class="text-2xl font-bold text-gray-800 mt-2"></h2>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 custom-radio">
+                    <div class="flex-1 min-w-[120px] sm:flex-none"><input type="radio" id="ans1" name="answer" value="1"><label for="ans1" class="block">1. 전혀 그렇지 않다</label></div>
+                    <div class="flex-1 min-w-[120px] sm:flex-none"><input type="radio" id="ans2" name="answer" value="2"><label for="ans2" class="block">2. 별로 그렇지 않다</label></div>
+                    <div class="flex-1 min-w-[120px] sm:flex-none"><input type="radio" id="ans3" name="answer" value="3"><label for="ans3" class="block">3. 보통이다</label></div>
+                    <div class="flex-1 min-w-[120px] sm:flex-none"><input type="radio" id="ans4" name="answer" value="4"><label for="ans4" class="block">4. 대체로 그렇다</label></div>
+                    <div class="flex-1 min-w-[120px] sm:flex-none"><input type="radio" id="ans5" name="answer" value="5"><label for="ans5" class="block">5. 매우 그렇다</label></div>
+                </div>
+            </div>
+            <div class="flex justify-between mt-8">
+                <button id="prev-btn" class="bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg hover:bg-gray-400 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">이전</button>
+                <button id="next-btn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300">다음</button>
+                <button id="submit-btn" class="hidden bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition duration-300">결과 보기</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden bg-white p-8 rounded-2xl shadow-lg">
+            <div class="text-center border-b pb-6 mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">MI 다중지능 검사 결과</h1>
+                <p class="text-lg text-gray-600 mt-2"><span id="result-name" class="font-semibold"></span>님의 강점 지능과 추천 진로</p>
+                <p id="result-grade" class="text-md text-gray-500"></p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">다중지능 분석 그래프</h2>
+                    <canvas id="miChart"></canvas>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">나의 강점 지능 TOP 3</h2>
+                    <div id="top-intelligences" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <div id="detailed-results" class="mt-10">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">강점 지능별 상세 설명 및 추천 직업</h2>
+                <div id="intelligence-details-container" class="space-y-8"></div>
+            </div>
+            
+            <div id="career-compass-section" class="mt-12">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">나의 진로 나침반 🧭</h2>
+                    <p class="text-gray-600 mt-2">강점 지능을 바탕으로 한 맞춤형 진로 탐색 가이드입니다.</p>
+                </div>
+                <div id="major-recommendation-container" class="bg-gray-50 p-6 rounded-2xl">
+                    <!-- Recommendations will be inserted here -->
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300">결과 인쇄하기</button>
+                <button onclick="location.reload()" class="ml-4 bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600 transition duration-300">다시 검사하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const questions = [{"text":"취미나 생활로 악기 연주나 음악감상을 즐긴다."},{"text":"운동경기를 보면 운동선수들의 장단점을 잘 집어낸다."},{"text":"어떤 일이든 실험하고 검증하는 것을 좋아한다."},{"text":"손으로 물건을 만들고. 그림을 그리는 것을 좋아한다."},{"text":"다른 사람보다 어휘력이 풍부한 편이다."},{"text":"친구나 가족들의 고민거리를 들어 주거나 해결하는 것을 좋아한다."},{"text":"나 자신을 되돌아보고, 앞으로의 생활을 계획하는 것을 좋아한다."},{"text":"자동차에 관심이 많고, 각각의 공통점과 차이점을 알고 있다."},{"text":"악보를 보면 그 곡의 멜로디를 어느 정도 알 수 있다."},{"text":"평소에 몸을 움직이며 활동하는 것을 좋아한다."},{"text":"학교 다닐 때 수학이나 과학과목을 좋아했다."},{"text":"어림짐작으로도 길이나 넓이를 비교적 잘 알아맞힌다."},{"text":"글이나 문서를 읽을 때 문법적으로 어색한 문장을 잘 찾아낸다."},{"text":"집에서 문제는 왜 발생하고 어떻게 해결하면 좋을지 알고 있다."},{"text":"나의 건강 상태나 기분, 컨디션을 정확히 파악할 수 있다."},{"text":"옷이나 가방을 보면 어떤 브랜드인지 바로 알아맞힐 수 있다."},{"text":"다른 사람의 연주나 노래를 들으면 어떤 점이 부족한지 알 수 있다."},{"text":"어떤 운동이라도 한두 번 해보면 잘 할 수 있다."},{"text":"다른 사람의 말 속에서 비논리적인 점을 잘 찾아낸다."},{"text":"다른 사람의 그림을 보고 평가를 잘 할 수 있다."},{"text":"나의 꿈은 작가나 아나운서다."},{"text":"다른 사람들로부터 다정다감하다는 소리를 자주 듣는다."},{"text":"내 생각이나 감정을 상황에 맞게 잘 통제하고 조절한다."},{"text":"동물이나 식물에 관하여 많은 정보를 알고 있다."},{"text":"다른 사람과 노래할 때 화음을 잘 넣는다."},{"text":"운동을 잘한다는 말을 자주 듣는다."},{"text":"학교생활에서 발생하는 문제를 해결하는 절차와 방법을 잘 알고 있다."},{"text":"내 방이나 교실을 꾸밀 때, 어떤 재료를 사용해야 하고 어떻게 배치해야 할 지 알아낸다."},{"text":"글을 조리 있고 설득력 있게 쓴다는 말을 자주 듣는다."},{"text":"친구나 어른들의 기분을 잘 파악하고 적절하게 대처한다."},{"text":"평소에 내 능력이나 재능을 계발하기 위해 노력하고 있다."},{"text":"동물이나 식물을 좋아하고 잘 돌본다."},{"text":"악기를 연주할 때 곡의 음정, 리듬, 빠르기, 분위기를 정확하게 표현한다."},{"text":"뜨개질이나 조각, 조립과 같이 섬세한 손놀림이 필요한 활동을 잘 할 수 있다."},{"text":"물건의 가격이나 은행이자 등을 잘 계산한다."},{"text":"다른 사람으로부터 그림 그리기나 만들기를 잘한다고 칭찬 받은 적이 있다."},{"text":"책이나 신문의 사설을 읽을 때 그 내용을 잘 이해한다."},{"text":"가족이나 학교친구, 선배, 후배 등 누구와도 잘 지낸다."},{"text":"내 일정을 다이어리에 정리하는 등 규칙적인 생활을 위해 노력한다."},{"text":"동식물과 관련된 직업에 종사하고 싶다."},{"text":"어떤 악기라도 연주법을 쉽게 배운다."},{"text":"개그맨이나 탤런트, 주변 사람들의 행동을 잘 흉내 낼 수 있다."},{"text":"어떤 것을 암기할 때 무작정 외우기보다는 논리적으로 이해하여 암기하곤 한다."},{"text":"새로운 지식을 습득할 때 그림이나 개념 지도를 그려 가며 외운다."},{"text":"국어 시간이나 글쓰기 시간을 좋아한다."},{"text":"내가 속한 집단에서 내가 해야 할 일을 잘 찾아서 수행한다."},{"text":"어떤 일에 실패했을 때 그 원인을 철저히 분석해서, 다음에는 그런 일이 생기지 않도록 노력한다."},{"text":"동식물이나 특정 사물이 갖는 특징을 분석하는 것을 좋아한다."},{"text":"빈칸을 주고 어떤 곡을 채워 보라고 하면 박자와 전체 곡의 분위기에 맞게 채울 수 있다."},{"text":"연기나 춤으로 내가 전하고자 하는 것을 잘 표현할 수 있다."},{"text":"어떤 문제가 생기면 성급하게 결론을 내리기보다는 여러 가지로 그 원인을 밝히려고 한다."},{"text":"고장 난 기계나 물건을 잘 고친다."},{"text":"다른 사람이 하는 말의 핵심을 잘 파악한다."},{"text":"다른 사람들 앞에서 발표나 연설을 잘한다."},{"text":"앞으로 어떻게 성공해야 할지에 대해 뚜렷한 신념을 가지고 있다."},{"text":"환경 문제를 해결할 수 있는 방법들을 많이 알고 있다."}];
+        const intelligenceMap = {'음악':[1,9,17,25,33,41,49],'신체운동':[2,10,18,26,34,42,50],'논리수학':[3,11,19,27,35,43,51],'공간':[4,12,20,28,36,44,52],'언어':[5,13,21,29,37,45,53],'인간친화':[6,14,22,30,38,46,54],'자기성찰':[7,15,23,31,39,47,55],'자연친화':[8,16,24,32,40,48,56]};
+        const intelligenceDetails = {'음악':{color:'bg-red-100',borderColor:'border-red-500',features:['소리, 리듬, 멜로디 등 음악적 패턴에 민감함','자주 노래를 흥얼거리거나 리듬에 맞춰 몸을 움직임','음에 대한 감각이 좋고, 음조와 소리 패턴을 잘 기억함'],jobs:'음악가(성악가, 연주가, 작곡가), 음악치료사, 음향기술자, 음악평론가, DJ, 가수, 댄서, 음악교사, 음반제작자, 영화 음악 작곡가'},'신체운동':{color:'bg-orange-100',borderColor:'border-orange-500',features:['몸의 균형 감각과 손-눈 협응력이 뛰어남','제스처나 몸짓을 통해 자신을 표현하는 데 능숙함','도구나 물체를 다루고 조절하는 데 빠르게 적응함'],jobs:'운동선수, 배우, 무용가, 조각가, 체육교사, 경찰, 소방관, 정비사, 외과의사, 건축가, 카레이서, 파일럿'},'논리수학':{color:'bg-yellow-100',borderColor:'border-yellow-500',features:['다양한 퍼즐 게임을 즐기고, 규칙에 기반한 활동을 선호함','사물의 작동 원리에 관심이 많고 분석적으로 문제에 접근함','논리적으로 생각하고, 수나 기호를 사용하여 문제를 해결하는 것을 좋아함'],jobs:'엔지니어, 수학자, 과학자, 은행원, 컴퓨터 프로그래머, 회계사, 의사, 법조인, 탐정, 정보기관원'},'공간':{color:'bg-green-100',borderColor:'border-green-500',features:['그림 그리기를 잘하고 시각적인 세부 묘사에 뛰어남','이미지로 장소를 기억하고, 지도를 해석하는 능력이 좋음','기계를 다루거나 사물을 분해하고 조립하는 것을 좋아함'],jobs:'디자이너, 건축가, 화가, 조각가, 항해사, 사진사, 파일럿, 애니메이터, 공예가, 외과의사, 요리사'},'언어':{color:'bg-blue-100',borderColor:'border-blue-500',features:['말하기와 글쓰기를 즐기고, 어휘력이 풍부함','새로운 언어를 쉽게 배우고, 단어 게임이나 말장난을 즐김','다른 사람의 말의 핵심을 잘 파악하고, 논리적으로 자신의 생각을 표현함'],jobs:'작가, 기자, 아나운서, 변호사, 정치가, 교사, 외교관, 번역가, 통역사, 개그맨, 경영자, 시인'},'인간친화':{color:'bg-indigo-100',borderColor:'border-indigo-500',features:['다른 사람의 감정이나 기분에 민감하고 공감을 잘함','또래 사이에서 인기가 많고, 리더십이 있음','다른 사람과 협동하여 일하는 데 능숙하고, 중재자 역할을 잘함'],jobs:'CEO, 사회운동가, 교사, 상담가, 정치가, 영업사원, 간호사, 사회복지사, 호텔리어, 웨딩플래너, 컨설턴트'},'자기성찰':{color:'bg-purple-100',borderColor:'border-purple-500',features:['자신의 감정, 강점, 약점을 명확하게 인식함','스스로 동기부여를 잘하고, 적절한 목표를 설정하여 노력함','실패의 원인을 분석하고 다음을 위해 계획하는 등 자기 성찰을 즐김'],jobs:'철학자, 기업가, 성직자, 심리학자, 작가, 발명가, 정신분석학자, 예술인, 심리치료사, 연구원'},'자연친화':{color:'bg-pink-100',borderColor:'border-pink-500',features:['동식물에 관심이 많고, 자연 환경을 선호함','자연물을 관찰하고 특징을 분석하는 것을 좋아함','화분이나 동물을 돌보는 데 열정이 있고, 환경 문제에 관심이 많음'],jobs:'의사, 수의사, 조리사, 동물 조련사, 식물학자, 생물학자, 천문학자, 고고학자, 환경 운동가, 농장 운영자, 원예가'}};
+        const conversionTable = {7:0.0,8:3.6,9:7.1,10:10.7,11:14.9,12:17.9,13:21.4,14:25.0,15:28.6,16:32.1,17:35.7,18:39.9,19:42.9,20:46.4,21:50.0,22:53.6,23:57.1,24:60.7,25:64.3,26:67.9,27:71.4,28:75.0,29:78.6,30:82.1,31:85.7,32:89.3,33:92.9,34:96.4,35:100.0};
+        
+        // --- ACCURATE & BENCHMARKED CareerData ---
+        const careerData = {
+            '컴퓨터공학·소프트웨어':{intelligences:['논리수학','공간'],subjects:{core:['미적분','확률과 통계','기하'],recommended:['물리학Ⅰ','정보'],career:['심화수학Ⅰ·Ⅱ','프로그래밍','정보통신']},books:['거의 모든 IT의 역사','과학이 필요한 시간','메타버스','누구나 쉽게 배우는 인공지능 스타트']},
+            '화학공학·신소재공학':{intelligences:['논리수학','자연친화','공간'],subjects:{core:['미적분','화학Ⅰ','물리학Ⅰ'],recommended:['화학Ⅱ','물리학Ⅱ','생명과학Ⅰ'],career:['심화수학Ⅰ','화학실험','물리학실험','융합과학']},books:['미술관에 간 화학자','나노 화학','분자 조각가들','걱정 많은 어른들을 위한 화학 이야기']},
+            '수학과':{intelligences:['논리수학'],subjects:{core:['미적분','확률과 통계','기하'],recommended:['물리학Ⅰ','경제'],career:['심화수학Ⅰ·Ⅱ','경제수학','정보과학']},books:['수학의 쓸모','수학이 필요한 순간','알고리즘, 인생을 계산하다','AI 시대의 수학']},
+            '생명과학과':{intelligences:['자연친화','논리수학'],subjects:{core:['생명과학Ⅰ','화학Ⅰ','미적분'],recommended:['생명과학Ⅱ','화학Ⅱ'],career:['고급 생명과학','고급 화학','생태와 환경']},books:['사라져 가는 음식들','이기적 유전자','코스모스','생명이란 무엇인가']},
+            '의예과':{intelligences:['자연친화','논리수학','인간친화'],subjects:{core:['생명과학Ⅰ','화학Ⅰ','미적분'],recommended:['생명과학Ⅱ','화학Ⅱ'],career:['고급 생명과학','고급 화학','생태와 환경','보건']},books:['나는 고백한다, 현대의학을','누구 먼저 살려야 할까?','10대의 뇌','의학, 인문으로 치유하다']},
+            '경제학과':{intelligences:['논리수학','인간친화','자기성찰'],subjects:{core:['확률과 통계','미적분','사회·문화','경제'],recommended:['정치와 법','세계사'],career:['경제수학','사회문제 탐구','정보']},books:['부의 시나리오','경제학 콘서트','죽은 경제학자의 살아있는 아이디어','자본주의']},
+            '미디어커뮤니케이션':{intelligences:['언어','인간친화','자기성찰'],subjects:{core:['화법과 작문','언어와 매체','사회·문화'],recommended:['세계사','정치와 법','윤리와 사상'],career:['매체 미술','사회문제 탐구','정보']},books:['여론','미디어 리터러시','생각의 탄생','도둑맞은 집중력']},
+            '심리학과':{intelligences:['자기성찰','인간친화','언어'],subjects:{core:['사회·문화','생활과 윤리','확률과 통계'],recommended:['영어Ⅰ','생명과학Ⅰ'],career:['논리학','교육학','보건']},books:['마음의 여섯 얼굴','당신이 알던 MBTI는 진짜 MBTI가 아니다','설득의 심리학','미움받을 용기']},
+            '국어교육과':{intelligences:['언어','인간친화','자기성찰'],subjects:{core:['화법과 작문','언어와 매체','독서'],recommended:['사회·문화','생활과 윤리'],career:['고전 읽기','교육학','심리학']},books:['다시, 시로 읽는 세상','난장이가 쏘아올린 작은 공','언어의 온도','교사의 시선']},
+            '음악과':{intelligences:['음악','자기성찰'],subjects:{core:['음악 연주','음악 감상과 비평'],recommended:['사회·문화','세계사'],career:['고전 읽기','매체 미술','논술']},books:['그래서 우리는 음악을 듣는다','삶은 예술로 빛난다','클래식 수업','음악의 기쁨']},
+            '연극영화과':{intelligences:['신체운동','언어','인간친화'],subjects:{core:['연극','영화 감상과 비평','문학'],recommended:['체육','미술','사회·문화'],career:['고전 읽기','매체 미술','심리학']},books:['배우수업','사피엔스','생각의 탄생','스토리, 어떻게 쓸 것인가']},
+            '디자인과':{intelligences:['공간','신체운동'],subjects:{core:['미술 창작','디자인 일반','미술 감상과 비평'],recommended:['사회·문화','과학과제 연구'],career:['드로잉','사진','매체 미술']},books:['디자인의 디자인','이것은 애플이 아니다','사물의 이력','디자이너의 생각법; 시프트']},
+            '체육교육과':{intelligences:['신체운동','인간친화','자기성찰'],subjects:{core:['체육','운동과 건강','스포츠 생활'],recommended:['생명과학Ⅰ','사회·문화'],career:['인간 발달','교육학','스포츠 과학']},books:['운동화는 뇌를 어떻게 변화시키는가','스포츠는 좋은 것인가','몸은 기억한다','스포츠 인권']}
+        };
+
+        // --- STATE ---
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let userName = '';
+        let userGrade = '';
+
+        // --- DOM ELEMENTS ---
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const startBtn = document.getElementById('start-btn');
+        const nameInput = document.getElementById('name');
+        const gradeInput = document.getElementById('grade');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const answerRadios = document.querySelectorAll('input[name="answer"]');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // --- FUNCTIONS ---
+        function startTest(){userName=nameInput.value.trim();userGrade=gradeInput.value.trim();if(!userName||!userGrade){alert('이름과 학년/반을 모두 입력해주세요.');return}startScreen.classList.add('hidden');testScreen.classList.remove('hidden');renderQuestion()}
+        function renderQuestion(){const question=questions[currentQuestionIndex];questionNumber.textContent=currentQuestionIndex+1;questionText.textContent=question.text;const progressPercentage=((currentQuestionIndex+1)/questions.length)*100;progressBar.style.width=`${progressPercentage}%`;progressText.textContent=`${currentQuestionIndex+1} / ${questions.length}`;const savedAnswer=userAnswers[currentQuestionIndex];answerRadios.forEach(radio=>{radio.checked=radio.value==savedAnswer});prevBtn.disabled=currentQuestionIndex===0;nextBtn.classList.toggle('hidden',currentQuestionIndex===questions.length-1);submitBtn.classList.toggle('hidden',currentQuestionIndex!==questions.length-1)}
+        function goToNextQuestion(){if(!saveAnswer())return;if(currentQuestionIndex<questions.length-1){currentQuestionIndex++;renderQuestion()}}
+        function goToPrevQuestion(){if(currentQuestionIndex>0){currentQuestionIndex--;renderQuestion()}}
+        function saveAnswer(){const selectedAnswer=document.querySelector('input[name="answer"]:checked');if(!selectedAnswer){alert('답변을 선택해주세요.');return!1}userAnswers[currentQuestionIndex]=parseInt(selectedAnswer.value);return!0}
+        function calculateResults(){const scores={};for(const[name,qNumbers]of Object.entries(intelligenceMap)){scores[name]=qNumbers.reduce((sum,qNum)=>sum+(userAnswers[qNum-1]||0),0)}return scores}
+        function convertScore(total){if(total<=7)return 0;if(total>=35)return 100;return conversionTable[total]||0}
+        function showResults(){if(!saveAnswer())return;const rawScores=calculateResults();const convertedScores={};for(const[name,score]of Object.entries(rawScores)){convertedScores[name]=convertScore(score)}const sortedIntelligences=Object.entries(convertedScores).sort((a,b)=>b[1]-a[1]);testScreen.classList.add('hidden');resultScreen.classList.remove('hidden');document.getElementById('result-name').textContent=userName;document.getElementById('result-grade').textContent=userGrade;renderChart(convertedScores);renderTopIntelligences(sortedIntelligences);renderDetailedResults(sortedIntelligences);renderCareerCompass(sortedIntelligences)}
+        function renderChart(scores){const ctx=document.getElementById('miChart').getContext('2d');if(window.myChart instanceof Chart){window.myChart.destroy()}window.myChart=new Chart(ctx,{type:'bar',data:{labels:Object.keys(scores),datasets:[{label:'환산 점수',data:Object.values(scores),backgroundColor:['rgba(239, 68, 68, 0.6)','rgba(249, 115, 22, 0.6)','rgba(234, 179, 8, 0.6)','rgba(34, 197, 94, 0.6)','rgba(59, 130, 246, 0.6)','rgba(99, 102, 241, 0.6)','rgba(168, 85, 247, 0.6)','rgba(236, 72, 153, 0.6)'],borderColor:['rgb(239, 68, 68)','rgb(249, 115, 22)','rgb(234, 179, 8)','rgb(34, 197, 94)','rgb(59, 130, 246)','rgb(99, 102, 241)','rgb(168, 85, 247)','rgb(236, 72, 153)'],borderWidth:1}]},options:{indexAxis:'y',scales:{x:{beginAtZero:!0,max:100}},plugins:{legend:{display:!1}}}})}
+        function renderTopIntelligences(sorted){const container=document.getElementById('top-intelligences');container.innerHTML='';const top3=sorted.slice(0,3);const rankColors=['bg-yellow-400','bg-gray-300','bg-yellow-600'];const rankText=['1순위 강점','2순위 강점','3순위 강점'];top3.forEach(([name,score],index)=>{const detail=intelligenceDetails[name];const element=document.createElement('div');element.className=`p-4 rounded-lg border-l-4 ${detail.borderColor} ${detail.color} flex items-center space-x-4`;element.innerHTML=`<div class="flex-shrink-0 w-12 h-12 ${rankColors[index]} rounded-full flex items-center justify-center text-white font-bold text-lg">${index+1}</div><div><p class="font-bold text-gray-800">${name} 지능</p><p class="text-sm text-gray-600">${rankText[index]}</p></div><div class="ml-auto text-right"><p class="font-bold text-lg text-blue-600">${score.toFixed(1)}점</p></div>`;container.appendChild(element)})}
+        function renderDetailedResults(sorted){const container=document.getElementById('intelligence-details-container');container.innerHTML='';const top3=sorted.slice(0,3);top3.forEach(([name,score])=>{const detail=intelligenceDetails[name];const element=document.createElement('div');element.className=`p-6 rounded-xl border-t-4 ${detail.borderColor} ${detail.color}`;const featuresHtml=detail.features.map(feature=>`<li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>${feature}</span></li>`).join('');element.innerHTML=`<h3 class="text-2xl font-bold text-gray-800 mb-4">${name} 지능</h3><div class="grid md:grid-cols-2 gap-6"><div><h4 class="font-semibold text-lg mb-2 text-gray-700">주요 특징</h4><ul class="space-y-2 text-gray-600">${featuresHtml}</ul></div><div><h4 class="font-semibold text-lg mb-2 text-gray-700">추천 직업군</h4><p class="text-gray-600">${detail.jobs}</p></div></div>`;container.appendChild(element)})}
+        
+        // --- REBUILT & ACCURATE Career Compass Functions ---
+        function getMajorRecommendations(sortedIntelligences) {
+            const top3Intelligences = sortedIntelligences.slice(0, 3).map(item => item[0]);
+            const recommendations = { priority1: [], priority2: [], priority3: [] };
+            const selectedMajors = new Set();
+
+            const findMajors = (intelligence, count) => {
+                const majorsForInt = Object.entries(careerData)
+                    .filter(([major, data]) => data.intelligences.includes(intelligence) && !selectedMajors.has(major))
+                    .map(([major]) => major);
+                
+                // Shuffle for variety
+                for (let i = majorsForInt.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [majorsForInt[i], majorsForInt[j]] = [majorsForInt[j], majorsForInt[i]];
+                }
+
+                const majorsToAdd = majorsForInt.slice(0, count);
+                majorsToAdd.forEach(major => selectedMajors.add(major));
+                return majorsToAdd;
+            };
+
+            if (top3Intelligences.length > 0) recommendations.priority1 = findMajors(top3Intelligences[0], 2);
+            if (top3Intelligences.length > 1) recommendations.priority2 = findMajors(top3Intelligences[1], 1);
+            if (top3Intelligences.length > 2) recommendations.priority3 = findMajors(top3Intelligences[2], 2);
+
+            return recommendations;
+        }
+
+        function renderCareerCompass(sortedIntelligences) {
+            const recommendations = getMajorRecommendations(sortedIntelligences);
+            const container = document.getElementById('major-recommendation-container');
+            container.innerHTML = '';
+
+            const createMajorDetailHtml = (major, priority) => {
+                const data = careerData[major];
+                if (!data) return '';
+
+                const subjectsHtml = (title, list) => `<div><h5 class="font-semibold text-md text-blue-600 mb-2">${title}</h5><div class="flex flex-wrap gap-2">${list.map(item => `<span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">${item}</span>`).join('')}</div></div>`;
+                
+                let booksToShow = [];
+                if (priority === 1 || priority === 2) {
+                    booksToShow = data.books.slice(0, 2);
+                } else {
+                    booksToShow = data.books.slice(0, 2); // Keep it consistent
+                }
+                const booksHtml = booksToShow.map(book => `<li class="flex items-start"><svg class="w-4 h-4 text-yellow-500 mr-2 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span>${book}</span></li>`).join('');
+
+                return `<div class="bg-white p-6 rounded-lg shadow-sm"><h5 class="text-xl font-bold text-blue-700 mb-4">${major}</h5><div class="grid md:grid-cols-2 gap-6"><div><h6 class="font-semibold text-gray-800 mb-3 text-lg">📚 고교 추천 과목</h6><div class="space-y-3 text-sm">${subjectsHtml('핵심 권장', data.subjects.core)}${subjectsHtml('권장', data.subjects.recommended)}${subjectsHtml('진로 선택', data.subjects.career)}</div></div><div><h6 class="font-semibold text-gray-800 mb-3 text-lg">📖 심화 탐구를 위한 추천 도서</h6><ul class="space-y-2 text-sm text-gray-700">${booksHtml}</ul></div></div></div>`;
+            };
+            
+            const createSection = (title, majors, priority) => {
+                if (majors.length === 0) return '';
+                const borderColors = {1: 'border-yellow-400', 2: 'border-gray-400', 3: 'border-yellow-600'};
+                return `<div class="mb-8"><h4 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 ${borderColors[priority]} pl-4">${title}</h4><div class="space-y-6">${majors.map(major => createMajorDetailHtml(major, priority)).join('')}</div></div>`;
+            };
+
+            let html = '';
+            html += createSection('1순위 추천 전공 (1순위 강점 지능 기반)', recommendations.priority1, 1);
+            html += createSection('2순위 추천 전공 (2순위 강점 지능 기반)', recommendations.priority2, 2);
+            html += createSection('3순위 추천 전공 (3순위 강점 지능 기반)', recommendations.priority3, 3);
+            
+            if (html.trim() === '') {
+                 container.innerHTML = `<p class="text-center text-gray-500 p-4">추천할 만한 학과 정보를 찾지 못했습니다.</p>`;
+            } else {
+                container.innerHTML = html;
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        startBtn.addEventListener('click', startTest);
+        nextBtn.addEventListener('click', goToNextQuestion);
+        prevBtn.addEventListener('click', goToPrevQuestion);
+        submitBtn.addEventListener('click', showResults);
+    </script>
+</body>
+</html>
